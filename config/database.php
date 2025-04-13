@@ -61,6 +61,8 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', storage_path('app/certificates/ca.pem')),
                 PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
                 PDO::MYSQL_ATTR_SSL_CIPHER => env('MYSQL_ATTR_SSL_CIPHER', 'DHE-RSA-AES256-SHA'),
+                PDO::MYSQL_ATTR_SSL_CIPHER => 'DHE-RSA-AES256-SHA',
+                PDO::MYSQL_ATTR_SSL_KEY => null,  // No client key needed
             ]) : [],
         ],
 
