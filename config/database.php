@@ -58,14 +58,14 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                // SSL Certificate (CA)
-        PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', storage_path('app/certificates/ca.pem')),
-        // Disable verification (essential for Aiven)
-        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-        // Set SSL cipher
-        PDO::MYSQL_ATTR_SSL_CIPHER => 'DHE-RSA-AES256-SHA',
-        // Set SSL mode to required
-        PDO::MYSQL_ATTR_SSL_MODE => PDO::MYSQL_ATTR_SSL_MODE_REQUIRED,
+          // Use the certificate path exactly as defined in your .env
+    PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+    
+    // These settings are critical for Aiven
+    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+    
+    // IMPORTANT: Remove any SSL_MODE settings that might be causing issues
+    // PDO::MYSQL_ATTR_SSL_MODE => PDO::MYSQL_ATTR_SSL_MODE_REQUIRED,
             ]) : [],
         ],
 
