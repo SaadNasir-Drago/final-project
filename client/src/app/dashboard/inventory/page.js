@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import ProductList from '../../../components/inventory/ProductList';
-import ProductSearch from '../../../components/inventory/ProductSearch';
 import { getProducts, deleteProduct } from '../../../services/productService';
 
 export default function InventoryPage() {
@@ -11,7 +10,7 @@ export default function InventoryPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams, setSearchParams] = useState({});
+  const [searchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -45,11 +44,6 @@ export default function InventoryPage() {
   useEffect(() => {
     fetchProducts(1, searchParams);
   }, []);
-
-  const handleSearch = (params) => {
-    setSearchParams(params);
-    fetchProducts(1, params);
-  };
   
   const handleDelete = async (id) => {
     try {

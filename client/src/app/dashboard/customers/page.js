@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import CustomerSearch from '../../../components/customers/CustomerSearch';
 import CustomerList from '../../../components/customers/CustomerList';
 import { getCustomers, deleteCustomer } from '../../../services/customerService';
 
@@ -27,20 +26,6 @@ export default function Customers() {
     } catch (error) {
       console.error('Failed to fetch customers:', error);
       setError('Failed to load customers. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  const handleSearch = async (searchTerm) => {
-    try {
-      setLoading(true);
-      // Adjust this to match your API's search endpoint
-      const data = await getCustomers({ search: searchTerm });
-      setCustomers(data.data || []);
-    } catch (error) {
-      console.error('Error searching customers:', error);
-      setError('Failed to search customers. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -109,7 +94,6 @@ export default function Customers() {
       
       {/* Header Actions */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        {/* <CustomerSearch onSearch={handleSearch} /> */}
         
         <div className="flex items-center space-x-3">
           <div className="relative">

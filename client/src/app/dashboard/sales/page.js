@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import OrderList from '../../../components/sales/OrderList';
-import OrderSearch from '../../../components/sales/OrderSearch';
 import { getOrders, deleteOrder } from '../../../services/orderService';
 import Pagination from '../../../components/common/Pagination';
 
@@ -13,7 +12,7 @@ export default function SalesPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams, setSearchParams] = useState({});
+  const [searchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -47,11 +46,6 @@ export default function SalesPage() {
   useEffect(() => {
     fetchOrders(1, searchParams);
   }, []);
-  
-  const handleSearch = (params) => {
-    setSearchParams(params);
-    fetchOrders(1, params);
-  };
   
   const handlePageChange = (page) => {
     fetchOrders(page, searchParams);

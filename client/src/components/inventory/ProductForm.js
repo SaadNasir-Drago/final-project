@@ -15,9 +15,9 @@ const ProductForm = ({ onSubmit, initialData = null, isSubmitting = false }) => 
     image: initialData?.image || '',
   });
   
-  const [categories, setCategories] = useState([]);
+  const [setCategories] = useState([]);
   const [errors, setErrors] = useState({});
-  const [isLoading, setLoading] = useState(false);
+  const [setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -168,27 +168,6 @@ const ProductForm = ({ onSubmit, initialData = null, isSubmitting = false }) => 
               <p className="mt-1 text-sm text-red-600">{errors.quantity}</p>
             )}
           </div>
-          
-          {/* Category */}
-          {/* <div>
-            <label htmlFor="category_id" className="block text-sm font-medium text-gray-700">
-              Category
-            </label>
-            <select
-              id="category_id"
-              name="category_id"
-              value={formData.category_id}
-              onChange={handleChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-            >
-              <option value="">Select a category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div> */}
           
           {/* Image URL */}
           <div>

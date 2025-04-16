@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import TransactionList from '../../../components/finance/TransactionList';
-import TransactionSearch from '../../../components/finance/TransactionSearch';
 import { getTransactions, deleteTransaction } from '../../../services/transactionService';
 
 export default function FinancePage() {
@@ -11,7 +10,7 @@ export default function FinancePage() {
   const [transactions, setTransactions] = useState([]); // Initialize as an empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams, setSearchParams] = useState({});
+  const [searchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -46,11 +45,6 @@ export default function FinancePage() {
     fetchTransactions(1, searchParams);
   }, [searchParams]);
   
-  const handleSearch = (params) => {
-    setSearchParams(params);
-    fetchTransactions(1, params);
-  };
-  
   const handleDelete = async (id) => {
     try {
       await deleteTransaction(id);
@@ -80,9 +74,6 @@ export default function FinancePage() {
           Add Transaction
         </button>
       </div>
-      
-      {/* Uncomment this line if you want to enable the search feature */}
-      {/* <TransactionSearch onSearch={handleSearch} /> */}
       
       {error && (
         <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">

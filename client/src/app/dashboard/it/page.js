@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import SecurityAlertList from '../../../components/it/SecurityAlertList';
-import SecurityAlertSearch from '../../../components/it/SecurityAlertSearch';
 import { getSecurityAlerts, deleteSecurityAlert } from '../../../services/securityAlertService';
 
 export default function SecurityAlertsPage() {
@@ -11,7 +10,7 @@ export default function SecurityAlertsPage() {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams, setSearchParams] = useState({});
+  const [searchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -60,7 +59,7 @@ export default function SecurityAlertsPage() {
   
   useEffect(() => {
     fetchAlerts(1, searchParams);
-  }, []);
+  }, [searchParams]);
   
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this security alert?')) {
@@ -77,11 +76,6 @@ export default function SecurityAlertsPage() {
   
   const handleAddAlert = () => {
     router.push('/dashboard/it/add');
-  };
-  
-  const handleSearch = (params) => {
-    setSearchParams(params);
-    fetchAlerts(1, params);
   };
   
   return (
@@ -109,9 +103,7 @@ export default function SecurityAlertsPage() {
     </button>
   </div>
 </div>
-
-      
-      
+ 
       {error && (
         <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
           <div className="flex">

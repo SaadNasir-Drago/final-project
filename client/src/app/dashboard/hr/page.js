@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import EmployeeList from '../../../components/hr/EmployeeList';
-import EmployeeSearch from '../../../components/hr/EmployeeSearch';
 import { getEmployees, deleteEmployee } from '../../../services/employeeService';
 
 export default function HRPage() {
@@ -11,7 +10,6 @@ export default function HRPage() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams, setSearchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -46,15 +44,6 @@ export default function HRPage() {
     fetchEmployees(1, searchParams);
   }, []);
   
-  const handleSearch = (params) => {
-    setSearchParams(params);
-    fetchEmployees(1, params);
-  };
-  
-//   const handlePageChange = (page) => {
-//     fetchEmployees(page, searchParams);
-//   };
-  
   const handleDelete = async (id) => {
     try {
       await deleteEmployee(id);
@@ -84,9 +73,7 @@ export default function HRPage() {
           Add Employee
         </button>
       </div>
-      
-      {/* <EmployeeSearch onSearch={handleSearch} /> */}
-      
+            
       {error && (
         <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
           <div className="flex">
