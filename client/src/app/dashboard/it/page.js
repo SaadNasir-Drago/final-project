@@ -10,7 +10,6 @@ export default function SecurityAlertsPage() {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -58,15 +57,15 @@ export default function SecurityAlertsPage() {
   };
   
   useEffect(() => {
-    fetchAlerts(1, searchParams);
-  }, [searchParams]);
+    fetchAlerts(1);
+  }, []);
   
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this security alert?')) {
       try {
         await deleteSecurityAlert(id);
         // Refresh the alerts list after successful deletion
-        fetchAlerts(pagination.current_page, searchParams);
+        fetchAlerts(pagination.current_page);
       } catch (error) {
         console.error('Error deleting security alert:', error);
         alert('Failed to delete security alert. Please try again.');
@@ -128,7 +127,7 @@ export default function SecurityAlertsPage() {
           alerts={alerts}
           onDelete={handleDelete}
           pagination={pagination}
-          onPageChange={(page) => fetchAlerts(page, searchParams)}
+          onPageChange={(page) => fetchAlerts(page)}
         />
       )}
     </DashboardLayout>

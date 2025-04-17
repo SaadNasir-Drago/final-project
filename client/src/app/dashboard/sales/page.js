@@ -12,7 +12,6 @@ export default function SalesPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -44,18 +43,18 @@ export default function SalesPage() {
   };
   
   useEffect(() => {
-    fetchOrders(1, searchParams);
+    fetchOrders(1);
   }, []);
   
   const handlePageChange = (page) => {
-    fetchOrders(page, searchParams);
+    fetchOrders(page);
   };
   
   const handleDelete = async (id) => {
     try {
       await deleteOrder(id);
       // Refresh the order list
-      fetchOrders(pagination.current_page, searchParams);
+      fetchOrders(pagination.current_page);
     } catch (error) {
       console.error('Error deleting order:', error);
       throw error;

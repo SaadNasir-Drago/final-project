@@ -10,7 +10,6 @@ export default function FinancePage() {
   const [transactions, setTransactions] = useState([]); // Initialize as an empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -42,14 +41,14 @@ export default function FinancePage() {
   };
 
   useEffect(() => {
-    fetchTransactions(1, searchParams);
-  }, [searchParams]);
+    fetchTransactions(1);
+  }, []);
   
   const handleDelete = async (id) => {
     try {
       await deleteTransaction(id);
       // Refresh the transaction list
-      fetchTransactions(pagination.current_page, searchParams);
+      fetchTransactions(pagination.current_page);
     } catch (error) {
       console.error('Error deleting transaction:', error);
       throw error;

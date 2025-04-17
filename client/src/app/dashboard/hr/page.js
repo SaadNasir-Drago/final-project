@@ -41,14 +41,14 @@ export default function HRPage() {
   };
   
   useEffect(() => {
-    fetchEmployees(1, searchParams);
+    fetchEmployees(1);
   }, []);
   
   const handleDelete = async (id) => {
     try {
       await deleteEmployee(id);
       // Refresh the employee list
-      fetchEmployees(pagination.current_page, searchParams);
+      fetchEmployees(pagination.current_page);
     } catch (error) {
       console.error('Error deleting employee:', error);
       throw error;

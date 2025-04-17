@@ -10,7 +10,6 @@ export default function InventoryPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchParams] = useState({});
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
@@ -42,13 +41,13 @@ export default function InventoryPage() {
   };
   
   useEffect(() => {
-    fetchProducts(1, searchParams);
+    fetchProducts(1);
   }, []);
   
   const handleDelete = async (id) => {
     try {
       await deleteProduct(id);
-      fetchProducts(pagination.current_page, searchParams);
+      fetchProducts(pagination.current_page);
     } catch (error) {
       // Pass the error message to the ProductList component
       throw error.response?.data?.message || error.message;
