@@ -79,11 +79,11 @@ const ProductList = ({ products, onDelete }) => {
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                  product.is_active 
+                  product.active 
                     ? 'bg-green-100 text-green-800' 
                     : 'bg-red-100 text-red-800'
                 }`}>
-                  {product.is_active ? 'Active' : 'Inactive'}
+                  {product.active ? 'Active' : 'Inactive'}
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

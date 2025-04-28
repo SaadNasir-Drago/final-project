@@ -1,77 +1,40 @@
+// pages/dashboard/finance/index.jsx
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import TransactionList from '../../../components/finance/TransactionList';
-import { getTransactions, deleteTransaction } from '../../../services/transactionService';
+import ProductReportForm from '../../../components/finance/ProductReportForm';
+import ProductReportTable from '../../../components/finance/ProductReportTable';
+import { getProductReport } from '../../../services/reportService';
 
 export default function FinancePage() {
-  const router = useRouter();
-  const [transactions, setTransactions] = useState([]); // Initialize as an empty array
-  const [loading, setLoading] = useState(true);
+  const [reportData, setReportData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    current_page: 1,
-    total: 0,
-    per_page: 10,
-    total_pages: 0
-  });
+  const [reportGenerated, setReportGenerated] = useState(false);
+  const [reportParams, setReportParams] = useState({});
   
-  const fetchTransactions = async (page = 1, params = {}) => {
+  const handleGenerateReport = async (params) => {
     try {
       setLoading(true);
-      const response = await getTransactions({ page, ...params });
-      
-      setTransactions(response.data || []); // Ensure this is an array
-      setPagination({
-        current_page: response.current_page || 1,
-        total: response.total || 0,
-        per_page: response.per_page || 10,
-        total_pages: response.last_page || 0
-      });
-      
       setError(null);
+      
+      const response = await getProductReport(params);
+      setReportData(response.data || []);
+      setReportParams(params);
+      setReportGenerated(true);
     } catch (error) {
-      console.error('Error fetching transactions:', error);
-      setError('Failed to fetch transactions. Please try again.');
-      setTransactions([]); // Reset to an empty array on error
+      console.error('Error generating report:', error);
+      setError('Failed to generate report. Please try again.');
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchTransactions(1);
-  }, []);
-  
-  const handleDelete = async (id) => {
-    try {
-      await deleteTransaction(id);
-      // Refresh the transaction list
-      fetchTransactions(pagination.current_page);
-    } catch (error) {
-      console.error('Error deleting transaction:', error);
-      throw error;
-    }
-  };
-  
-  const handleAddTransaction = () => {
-    router.push('/dashboard/finance/add');
-  };
   
   return (
-    <DashboardLayout title="Financial Management" description="Manage transactions and financial data">
-      <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-800">Transactions</h2>
-        <button
-          onClick={handleAddTransaction}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-          Add Transaction
-        </button>
+    <DashboardLayout title="Financial Reports" description="Generate financial reports based on product data">
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Product Financial Report</h2>
+        <p className="text-gray-600 mt-1">Generate reports based on product sales for a specific date range</p>
       </div>
       
       {error && (
@@ -89,12 +52,39 @@ export default function FinancePage() {
         </div>
       )}
       
+      <div className="bg-white rounded-lg shadow mb-6">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-800">Report Filters</h3>
+        </div>
+        <div className="p-6">
+          <ProductReportForm onSubmit={handleGenerateReport} isSubmitting={loading} />
+        </div>
+      </div>
+      
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
         </div>
-      ) : (
-        <TransactionList transactions={transactions} onDelete={handleDelete} />
+      ) : reportGenerated && (
+        <div className="bg-white rounded-lg shadow">
+          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 className="text-lg font-medium text-gray-800">
+              Report Results: {reportParams.startDate} to {reportParams.endDate}
+            </h3>
+            <button 
+              onClick={() => window.print()}
+              className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              Print
+            </button>
+          </div>
+          <div className="p-6">
+            <ProductReportTable reportData={reportData} />
+          </div>
+        </div>
       )}
     </DashboardLayout>
   );

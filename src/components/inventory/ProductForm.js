@@ -11,7 +11,7 @@ const ProductForm = ({ onSubmit, initialData = null, isSubmitting = false }) => 
     price: initialData?.price || '',
     quantity: initialData?.quantity || '',
     category_id: initialData?.category_id || '',
-    is_active: initialData?.is_active ?? true,
+    active: initialData?.active ?? true,
     image: initialData?.image || '',
   });
   
@@ -188,14 +188,14 @@ const ProductForm = ({ onSubmit, initialData = null, isSubmitting = false }) => 
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center">
               <input
-                id="is_active"
-                name="is_active"
+                id="active"
+                name="active"
                 type="checkbox"
-                checked={formData.is_active}
+                checked={formData.active}
                 onChange={handleChange}
                 className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
               />
-              <label htmlFor="is_active" className="ml-2 block text-sm text-gray-700">
+              <label htmlFor="active" className="ml-2 block text-sm text-gray-700">
                 Active
               </label>
             </div>
