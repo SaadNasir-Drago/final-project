@@ -8,6 +8,7 @@ use App\Http\Controllers\API\BudgetController;
 use App\Http\Controllers\API\EmployeeController;
 use App\Http\Controllers\API\SecurityAlertController;
 use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\ReportController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -36,4 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // IT Module (Security Alerts)
     Route::apiResource('security-alerts', SecurityAlertController::class);
+
+    Route::get('/reports/products', [ReportController::class, 'getProductReport']);
 });
