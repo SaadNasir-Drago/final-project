@@ -348,9 +348,9 @@ export default function Dashboard() {
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
                       </th>
-                      <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {/* <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
-                      </th>
+                      </th> */}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -376,9 +376,9 @@ export default function Dashboard() {
                           {alert.status.replace('_', ' ').charAt(0).toUpperCase() + alert.status.replace('_', ' ').slice(1)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <Link href={`#`} className="text-purple-600 hover:text-purple-900">
+                          {/* <Link href={`#`} className="text-purple-600 hover:text-purple-900">
                             View
-                          </Link>
+                          </Link> */}
                         </td>
                       </tr>
                     ))}
