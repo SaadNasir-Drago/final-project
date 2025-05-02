@@ -19,7 +19,7 @@ class ReportController extends Controller
             'endDate' => 'required|date|after_or_equal:startDate',
             'productId' => 'sometimes|string',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
@@ -41,18 +41,33 @@ class ReportController extends Controller
             'order_items_count' => $orderItemsCount
         ];
         
-        // Original query
+        // Start with a product query to ensure we include all relevant products
+        $productQuery = Product::query();
+        
+        // If specific product ID requested, filter to just that product
+        if ($request->productId && $request->productId !== 'all') {
+            $productQuery->where('id', $request->productId);
+        }
+        
+        // Get the products that should be included
+        $products = $productQuery->get();
+        $productIds = $products->pluck('id')->toArray();
+        
+        // Original sales query
         $query = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->whereBetween('orders.created_at', [$request->startDate, $request->endDate])
             ->where('orders.status', '!=', 'cancelled');
-    
-        // Filter by product if specified
+
+        // Filter by requested products
         if ($request->productId && $request->productId !== 'all') {
             $query->where('order_items.product_id', $request->productId);
+        } else {
+            // If showing all products, still limit to the ones in our product query
+            $query->whereIn('order_items.product_id', $productIds);
         }
-    
-        $reportData = $query->select(
+
+        $salesData = $query->select(
             'products.id',
             'products.name',
             DB::raw('SUM(order_items.quantity) as quantity'),
@@ -60,15 +75,29 @@ class ReportController extends Controller
             DB::raw('SUM(order_items.quantity * order_items.unit_price) as total')
         )
         ->groupBy('products.id', 'products.name', 'products.price')
-        ->orderBy('products.name')
-        ->get();
-    
+        ->get()
+        ->keyBy('id');
+        
+        // Build complete report including products with zero sales
+        $reportData = $products->map(function ($product) use ($salesData) {
+            if (isset($salesData[$product->id])) {
+                // Product has sales in the period
+                return $salesData[$product->id];
+            } else {
+                // Product has no sales in the period
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'quantity' => 0,
+                    'price' => $product->price,
+                    'total' => 0
+                ];
+            }
+        })->values();
+
         return response()->json([
             'data' => $reportData,
             'debug' => $debug
         ]);
     }
-    
-    
-    
 }
