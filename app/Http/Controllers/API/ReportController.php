@@ -88,9 +88,9 @@ class ReportController extends Controller
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
-                    'quantity' => 0,
+                    'quantity' => 1,  // Changed from 0 to 1
                     'price' => $product->price,
-                    'total' => 0
+                    'total' => $product->price  // Changed from 0 to product price
                 ];
             }
         })->values();
